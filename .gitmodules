@@ -1,0 +1,3 @@
+[submodule "submodules/libmseed"]
+	path = submodules/libmseed
+	url = https://github.com/AlekseyDurachenko/libmseed.git

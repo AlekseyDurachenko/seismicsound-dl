@@ -1,0 +1,284 @@
+Developer(s):
+    2017 Durachenko Aleksey V. <durachenko.aleksey@gmail.com>
+Usage:
+    seismicsound-dl [OPTIONS]
+Options:
+  =============================================================================
+  options that affect the output sound files
+  =============================================================================
+    --sample-rate
+                set the sample rate of the sound files
+                (the default is '44100')
+    --sample-format
+                set the sample format of the sound files
+                you can use the following values:
+                    i16 -- 16 bit per sample (integer)
+                    i24 -- 24 bit per sample (integer)
+                    i32 -- 32 bit per sample (integer)
+                    f32 -- 32 bit per sample (IEEE774)
+                    f64 -- 64 bit per sample (IEEE774)
+                (the default is 'i16')
+    --output-directory
+                set the output directory of the sound files
+                (the default is '.' (current directory))
+    --filename-format
+                set the file name format of the sound files
+                you can use the following variables in the pattern:
+                    %eid%       -- event id
+                    %net%       -- network code
+                    %sta%       -- station code
+                    %loc%       -- location code
+                    %chan%      -- channel code
+                    %starttime% -- start time 
+                                   (will be represented as 'YYYYMMDDTHHMMSS')
+                    %endtime%   -- end time
+                                   (will be represented as 'YYYYMMDDTHHMMSS')
+                (the default is '%eid%.%net%.%sta%.%loc%.%cha%.%stm%.%etm%')
+    --filename-conflict-action
+                set the action on duplicate file names
+                you can use the following values:
+                    suffix    -- add an unique suffix to the new file
+                    overwrite -- overwrite the old file with the new file
+                    skip      -- do not download the duplicate of the file
+                (the default is 'suffix')
+
+  =============================================================================
+  options that affect the event list selection parameters
+  =============================================================================
+    --event-id
+                set the event id                
+                (if this option is set, all other options related to the 
+                selection list of events (--event-*) will be ignored
+                the result will be a list of the one event 
+                with the specified id)
+    --event-start-time
+                set the start time of the time interval when event is happened
+                (time must have the following format: 'YYYY-MM-DDTHH:MM:SS')
+    --event-end-time
+                set the end time of the time interval when event is happened
+                (time must have the following format: 'YYYY-MM-DDTHH:MM:SS')
+    --event-min-mag
+                set the minimum magnitude of the earthquake
+                (see the 'earthquake magnitude scale' below for detail)
+    --event-max-mag
+                set the maximum magnitude of the earthquake
+                (see the 'earthquake magnitude scale' below for detail)
+    --event-min-depth
+                set the minimum depth of the earthquake
+                (unit: kilometer)
+    --event-max-depth
+                set the maximum depth of the earthquake
+                (unit: kilometer)
+
+    BOX search terms, incompatible with RADIAL search terms
+    --event-min-lat
+                set the minimum latitude
+                (unit: degree; range: [-90.0; 90.0])
+    --event-max-lat
+                set the maximum latitude
+                (unit: degree; range: [-90.0; 90.0])
+    --event-min-lon
+                set the minimum longitude
+                (unit: degree; range: [-180.0; 180.0])
+    --event-max-lon
+                set the maximum longitude
+                (unit: degree; range: [-180.0; 180.0])
+
+    RADIAL search terms, incompatible with the BOX search terms
+    --event-lat
+                set the central latitude point
+                (unit: degree; range: [-90.0; 90.0])
+    --event-lon
+                set the central longitude point
+                (unit: degree; range: [-180.0; 180.0])
+    --event-min-radius
+                set the minimum distance from the geographic point 
+                defined by the central latitude and longitude
+                (unit: degree; range: [-180.0; 180.0])
+    --event-max-radius
+                set the maximum distance from the geographic point 
+                defined by the central latitude and longitude
+                (unit: degree; range: [-180.0; 180.0])
+
+  =============================================================================
+  options that affect the trace list selection parameters
+  =============================================================================
+    --network
+                set the network code
+                (see the 'network code format' below for detail)
+    --station
+                set the station code
+                (see the 'station code format' below for detail)
+    --location
+                set the location code
+                (see the 'location code format' below for detail)
+    --channel
+                set the channel code
+                (see the 'channel code format' below for detail)
+    --start-time
+                set the start time of the trace of the data
+                (time must have the following format: 'YYYY-MM-DDTHH:MM:SS')
+    --end-time
+                set the end time of the trace of the data
+                (time must have the following format: 'YYYY-MM-DDTHH:MM:SS')
+
+                NOTE: if you specify the time interval of the trace of the data
+                then all options related to the selection 
+                list of events (--event-*) will be ignored
+
+    BOX search terms, incompatible with RADIAL search terms
+    --station-min-lat
+                set the minimum latitude
+                (unit: degree; range: [-90.0; 90.0])
+    --station-max-lat
+                set the maximum latitude
+                (unit: degree; range: [-90.0; 90.0])
+    --station-min-lon
+                set the minimum longitude
+                (unit: degree; range: [-180.0; 180.0])
+    --station-max-lon
+                set the maximum longitude
+                (unit: degree; range: [-180.0; 180.0])
+
+    RADIAL search terms, incompatible with the BOX search terms
+    --station-lat
+                set the central latitude point
+                (unit: degree; range: [-90.0; 90.0])
+    --station-lon
+                set the central longitude point
+                (unit: degree; range: [-180.0; 180.0])
+    --station-min-radius
+                set the minimum distance from the geographic point 
+                defined by the central latitude and longitude
+                (unit: degree; range: [-180.0; 180.0])
+    --station-max-radius
+                set the maximum distance from the geographic point 
+                defined by the central latitude and longitude
+                (unit: degree; range: [-180.0; 180.0])
+
+  =============================================================================
+  other options
+  =============================================================================
+    --limit
+                set the limit of the total number of downloadable sounds
+                (the default is unlimited)
+    --limit-per-event
+                set the limit of the total number of downloadable sounds 
+                per one event    
+                (the default is unlimited)
+    --seconds-before
+                set the additional seconds which will be downloaded 
+                before the first seismic phase
+                (the defalt is '300' seconds)
+    --seconds-after
+                set the seconds which will be downloaded 
+                after the first seismic phase
+                (the defalt is '3600' seconds)
+    --fdsnws-dataselect-url
+                set the URL of the fdsnws dataselect service
+                you can also use the CODE which can be found in the fdsnws 
+                dataselect service list (see --print-fdsnws-dataselect-services)
+                (the default is the first record 
+                of the fdsnws dataselect service list)
+    --fdsnws-station-url
+                set the URL of the fdsnws station service
+                you can also use the CODE which can be found in the fdsnws 
+                station service list (see --print-fdsnws-station-services)
+                (the default is the first record 
+                of the fdsnws station service list)
+    --fdsnws-event-url
+                set the URL of the fdsnws event service
+                you can also use the CODE which can be found in the fdsnws 
+                event service list (see --print-fdsnws-event-services)
+                (the default is the first record 
+                of the fdsnws event service list)
+    --print-fdsnws-dataselect-services
+                display the list of the known fdsnws dataselect services
+                and exit
+    --print-fdsnws-station-services
+                display the list of the known fdsnws station services
+                and exit
+    --print-fdsnws-event-services
+                display the list of the known fdsnws event services
+                and exit
+    --print-fdsnws-services
+                display the list of the known fdsnws services
+                and exit
+    --print-selected-events
+                display the list of the selected events 
+                without download the any sounds
+                (only options that affect the event list selection parameters
+                will be used)
+    --print-selected-traces
+                display the list of the selected traces 
+                without download the any sounds
+                (only options that affect the trace list selection parameters
+                will be used)               
+    --selected-events-format
+                set the format of the selected event row
+                you can use the following variables in the pattern:    
+                    %eid%   -- event id
+                    %type%  -- magnitude type
+                    %val%   -- magnitude value
+                    %lat%   -- latitude
+                    %lon%   -- longitude
+                    %depth% -- depth
+                    %time%  -- time 
+                               (will be represented as 'YYYY-MM-DDTHH:MM:SS')
+                    %desc%  -- event description
+                (the default is ' %eid% | %type% | %val% | %lat% | %lon% | %depth% | %time | %desc%')
+    --selected-traces-format
+                set the format of the selected trace row
+                you can use the following variables in the pattern:      
+                    %net%    -- network code
+                    %sta%    -- station code
+                    %loc%    -- location code
+                    %chan%   -- channel code
+                    %lat%    -- latitude
+                    %lon%    -- longitude
+                    %elevat% -- elevation
+                    %depth%  -- depth
+                    %stime%  -- start time
+                                (will be represented as 'YYYY-MM-DDTHH:MM:SS')
+                    %etime%  -- end time
+                                (will be represented as 'YYYY-MM-DDTHH:MM:SS') 
+                    %site%   -- site name
+                (the default is ' %net% | %sta% | %loc% | %chan% | %lat% | %lon% | %elevat% | %depth% | %stime% | %etime% | %site%')
+    --debug
+                display the debug information
+    --help
+                display this help message and exit
+
+  =============================================================================
+  quick reference guide
+  ============================================================================= 
+  earthquake magnitude scale:
+  - 2.5 or less    -- usually not felt, but can be recorded by seismograph
+                      (~900,000 per year)
+  - 2.5 to 5.4     -- often felt, but only causes minor damage
+                      (~30,000 per year)
+  - 5.5 to 6.0     -- slight damage to buildings and other structures
+                      (~500 per year)
+  - 6.1 to 6.9     -- may cause a lot of damage in very populated areas
+                      (~100 per year)
+  - 7.0 to 7.9     -- major earthquake. Serious damage
+                      (~20 per year)
+  - 8.0 or greater -- great earthquake. Can totally destroy communities
+                      near the epicenter 
+                      (one every 5 to 10 years)
+
+  network code format:
+  - 2 characters: uppercase letters or numbers  
+
+  station code format:
+  - 5 characters: uppercase letters or numbers
+
+  location code format:
+  - 2 characters: uppercase letters or numbers
+
+  channel code format:
+  - 3 characters: uppercase letters or numbers
+
+  you can also use the special symbols:
+  - '?' for any one symbol (example: 'EH?', 'E??R')
+  - '*' for any number of symbols (example: 'EH*', 'AK*')
