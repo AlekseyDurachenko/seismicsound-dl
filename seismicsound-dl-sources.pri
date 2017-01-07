@@ -59,7 +59,7 @@ SOURCES        +=                                                   \
 FORMS          +=                                                   \
 
 TRANSLATIONS   +=                                                   \
-    $$PWD/translations/ru.ts                                        \
+#    $$PWD/translations/ru.ts                                        \
 
 RESOURCES      +=                                                   \
     $$PWD/qrc/usage.qrc                                             \
@@ -82,5 +82,5 @@ OTHER_FILES    +=                                                   \
 }
 
 win32 {
-    RC_FILE     += res/windows/rc.rc
+#    RC_FILE     += res/windows/rc.rc
 }
