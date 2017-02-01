@@ -82,5 +82,5 @@ OTHER_FILES    +=                                                   \
 }
 
 win32 {
-#    RC_FILE     += res/windows/rc.rc
+    RC_FILE     += res/windows/rc.rc
 }
