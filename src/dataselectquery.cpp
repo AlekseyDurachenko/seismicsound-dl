@@ -75,7 +75,7 @@ QUrl DataSelectQuery::buildQueryUrl() const
 
     url.addQueryItem("net", m_network);
     url.addQueryItem("sta", m_station);
-    url.addQueryItem("loc", m_location);
+    url.addQueryItem("loc", m_location.isEmpty() ? "--" : m_location);
     url.addQueryItem("cha", m_channel);
     url.addQueryItem("starttime", m_startTime.toString("yyyy-MM-ddTHH:mm:ss"));
     url.addQueryItem("endtime", m_endTime.toString("yyyy-MM-ddTHH:mm:ss"));
