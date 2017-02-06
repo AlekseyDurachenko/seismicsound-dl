@@ -226,7 +226,7 @@ Options:
                     %time%  -- time 
                                (will be represented as 'YYYY-MM-DDTHH:MM:SS')
                     %desc%  -- event description
-                (the default is ' %eid% | %type% | %val% | %lat% | %lon% | %depth% | %time | %desc%')
+                (the default is ' %eid% | %type% | %val% | %lat% | %lon% | %depth% | %time% | %desc%')
     --selected-traces-format
                 set the format of the selected trace row
                 you can use the following variables in the pattern:      
