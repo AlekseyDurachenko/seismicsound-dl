@@ -35,5 +35,10 @@ bool miniseed_to_datasamples(const QString &fileName,
                              qint64 samplecnt,
                              QString *reason = 0);
 
+bool miniseed_to_datasamples_skip_gap(const QString &fileName,
+                                      float *datasamples,
+                                      qint64 samplecnt,
+                                      QString *reason = 0);
+
 
 #endif // MINISEEDUTILS_H

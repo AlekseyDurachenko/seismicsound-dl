@@ -192,3 +192,73 @@ bool miniseed_to_datasamples(const QString &fileName,
 
     return false;
 }
+
+bool miniseed_to_datasamples_skip_gap(const QString &fileName,
+                                      float *datasamples,
+                                      qint64 samplecnt,
+                                      QString *reason)
+{
+    try {
+        MSRecord *msr = NULL;
+        int retcode = MS_ENDOFFILE;
+        qint64 sampleIndex = 0;
+
+        for (qint64 i = 0; i < samplecnt; ++i) {
+            datasamples[i] = 0.0;
+        }
+
+        while (true) {
+            retcode = ms_readmsr(&msr, fileName.toLocal8Bit().data(), -1, NULL, NULL, 1, 1, 0);
+            if (retcode != MS_NOERROR) {
+                break;
+            }
+
+            if (msr->sampletype == 'a') {
+                throw QObject::tr("unsupported miniseed datatype");
+            }
+            else if (msr->sampletype == 'i') {
+                for (qint64 i = 0; i < msr->numsamples && sampleIndex < samplecnt; ++i) {
+                    datasamples[sampleIndex] = reinterpret_cast<int *>(msr->datasamples)[i];
+                    sampleIndex += 1;
+                }
+            }
+            else if (msr->sampletype == 'f') {
+                for (qint64 i = 0; i < msr->numsamples && sampleIndex < samplecnt; ++i) {
+                    datasamples[sampleIndex] = reinterpret_cast<float *>(msr->datasamples)[i];
+                    sampleIndex += 1;
+                }
+            }
+            else if (msr->sampletype == 'd') {
+                for (qint64 i = 0; i < msr->numsamples && sampleIndex < samplecnt; ++i) {
+                    datasamples[sampleIndex] = reinterpret_cast<double *>(msr->datasamples)[i];
+                    sampleIndex += 1;
+                }
+            }
+        }
+
+        ms_readmsr(&msr, NULL, 0, NULL, NULL, 0, 0, 0);
+        if (retcode != MS_ENDOFFILE) {
+            throw QString(ms_errorstr(retcode));
+        }
+
+        double absMax = 0.0;
+        for (qint64 i = 0; i < samplecnt; ++i) {
+            if (qAbs(datasamples[i]) > absMax) {
+                absMax = qAbs(datasamples[i]);
+            }
+        }
+
+        for (qint64 i = 0; i < samplecnt; ++i) {
+            datasamples[i] /= absMax;
+        }
+
+        return true;
+    }
+    catch (const QString &errorString) {
+        if (reason) {
+            *reason = errorString;
+        }
+    }
+
+    return false;
+}
