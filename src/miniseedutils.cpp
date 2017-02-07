@@ -77,6 +77,43 @@ bool miniseed_samplerate(const QString &fileName, double *samplerate, QString *r
 }
 
 
+qint64 miniseed_samplecount(const QString &fileName, QString *reason)
+{
+    try {
+        qint64 count = 0;
+        MSRecord *msr = NULL;
+        while (true) {
+            int retcode = ms_readmsr(&msr, fileName.toLocal8Bit().data(), -1, NULL, NULL, 1, 1, 0);
+            if (retcode != MS_NOERROR) {
+                break;
+            }
+
+            switch (msr->sampletype) {
+            case 'i':
+            case 'f':
+            case 'd':
+                count += msr->samplecnt;
+                break;
+            case 'a':
+            default:
+                throw QObject::tr("unsupported miniseed datatype");
+            }
+        }
+
+        ms_readmsr(&msr, NULL, 0, NULL, NULL, 0, 0, 0);
+
+        return count;
+    }
+    catch (const QString &errorString) {
+        if (reason) {
+            *reason = errorString;
+        }
+    }
+
+    return -1;
+}
+
+
 bool miniseed_to_datasamples(const QString &fileName,
                              const QDateTime &startTime,
                              float *datasamples,

@@ -25,6 +25,10 @@ bool miniseed_samplerate(const QString &fileName,
                          double *samplerate,
                          QString *reason = 0);
 
+// returns -1 if error or number of samples
+qint64 miniseed_samplecount(const QString &fileName,
+                            QString *reason = 0);
+
 bool miniseed_to_datasamples(const QString &fileName,
                              const QDateTime &startTime,
                              float *datasamples,
