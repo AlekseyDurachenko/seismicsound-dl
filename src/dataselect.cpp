@@ -99,13 +99,22 @@ bool dataselect_and_save_sound(const AppArguments &arguments,
         }
 
         // if miniseed file size too small miniseed data not found at the time
-        if (miniseedFile.size() < 4096) {
-            throw QObject::tr("the trace is empty (possible, station was off at specified time)");
-        }
+        //if (miniseedFile.size() < 4096) {
+        //    throw QObject::tr("the trace is empty (possible, station was off at specified time)");
+        //}
 
         // validate the miniseed file
         if (!miniseed_validate(miniseedFile.fileName(), reason)) {
             return false;
+        }
+
+        // calculate actual sample count
+        const qint64 samplecount = miniseed_samplecount(miniseedFile.fileName(), reason);
+        if (samplecount < 0) {
+            return false;
+        }
+        else if (samplecount == 0) {
+            throw QObject::tr("the trace is empty (possible, station was off at specified time)");
         }
 
         // read sample rate for array size calculating
@@ -122,7 +131,8 @@ bool dataselect_and_save_sound(const AppArguments &arguments,
         }
 
         // calculate actual sample count
-        const qint64 samplecount = static_cast<qint64>(query.startTime().secsTo(query.endTime()) * samplerate);
+        //const qint64 samplecount = static_cast<qint64>(query.startTime().secsTo(query.endTime()) * samplerate);
+
         // resize the file for store the all datasamples
         if (!datasamplesFile.resize(samplecount * sizeof(float))) {
             throw datasamplesFile.errorString();
@@ -135,13 +145,23 @@ bool dataselect_and_save_sound(const AppArguments &arguments,
         }
 
         // read the datasamples from miniseed to the datasamples array
-        if (!miniseed_to_datasamples(miniseedFile.fileName(),
-                                     query.startTime(),
-                                     datasamples,
-                                     samplecount,
-                                     reason)) {
+        //if (!miniseed_to_datasamples(miniseedFile.fileName(),
+        //                             query.startTime(),
+        //                             datasamples,
+        //                             samplecount,
+        //                             reason)) {
+        //    return false;
+        //}
+
+        // read the datasamples from miniseed to the datasamples array without
+        // any gap and time control, usefull for data with many small gaps
+        if (!miniseed_to_datasamples_skip_gap(miniseedFile.fileName(),
+                                              datasamples,
+                                              samplecount,
+                                              reason)) {
             return false;
         }
+
 
         // try to open file for write the wav file
         QFile soundFile(fileName);
