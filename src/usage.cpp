@@ -33,6 +33,7 @@ void show_usage()
         QFile file(usageFilePath);
         if (file.open(QIODevice::ReadOnly)) {
             usageText = file.readAll();
+            break;
         }
     }
 
