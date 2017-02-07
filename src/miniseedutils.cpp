@@ -241,8 +241,14 @@ bool miniseed_to_datasamples_skip_gap(const QString &fileName,
             throw QString(ms_errorstr(retcode));
         }
 
+        double avg = 0.0;
+        for (qint64 i = 0; i < samplecnt; ++i) {
+            avg += datasamples[i] / samplecnt;
+        }
+
         double absMax = 0.0;
         for (qint64 i = 0; i < samplecnt; ++i) {
+            datasamples[i] -= avg;
             if (qAbs(datasamples[i]) > absMax) {
                 absMax = qAbs(datasamples[i]);
             }
