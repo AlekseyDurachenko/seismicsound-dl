@@ -23,6 +23,7 @@ bool miniseed_validate(const QString &fileName, QString *reason)
         MSRecord *msr = NULL;
         int retcode = ms_readmsr(&msr, fileName.toLocal8Bit().data(), -1, NULL, NULL, 1, 1, 0);
         if (retcode != MS_NOERROR) {
+            ms_readmsr(&msr, NULL, 0, NULL, NULL, 0, 0, 0);
             throw QString(ms_errorstr(retcode));
         }
 
@@ -33,6 +34,7 @@ bool miniseed_validate(const QString &fileName, QString *reason)
             break;
         case 'a':
         default:
+            ms_readmsr(&msr, NULL, 0, NULL, NULL, 0, 0, 0);
             throw QObject::tr("unsupported miniseed datatype");
         }
 
@@ -56,6 +58,7 @@ bool miniseed_samplerate(const QString &fileName, double *samplerate, QString *r
         MSRecord *msr = NULL;
         int retcode = ms_readmsr(&msr, fileName.toLocal8Bit().data(), -1, NULL, NULL, 1, 1, 0);
         if (retcode != MS_NOERROR) {
+            ms_readmsr(&msr, NULL, 0, NULL, NULL, 0, 0, 0);
             throw QString(ms_errorstr(retcode));
         }
 
@@ -96,7 +99,8 @@ qint64 miniseed_samplecount(const QString &fileName, QString *reason)
                 break;
             case 'a':
             default:
-                throw QObject::tr("unsupported miniseed datatype");
+                // skip unsupported sampletype
+                break;
             }
         }
 
@@ -214,7 +218,8 @@ bool miniseed_to_datasamples_skip_gap(const QString &fileName,
             }
 
             if (msr->sampletype == 'a') {
-                throw QObject::tr("unsupported miniseed datatype");
+                // skip unsupported sampletype
+                continue;
             }
             else if (msr->sampletype == 'i') {
                 for (qint64 i = 0; i < msr->numsamples && sampleIndex < samplecnt; ++i) {
