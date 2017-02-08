@@ -31,7 +31,7 @@
         
           <p>Каждый год на нашей планете происходят миллионы землетрясений.
           Большинство из них могут быть зафиксированы только высокоточными приборами,
-          но бывают и такие, которые приводят разрушению целых городов. Более
+          но бывают и такие, которые приводят к разрушению целых городов. Более
           подробно о природе землетрясений можно почитать на
           <a href="https://ru.wikipedia.org/wiki/%D0%97%D0%B5%D0%BC%D0%BB%D0%B5%D1%82%D1%80%D1%8F%D1%81%D0%B5%D0%BD%D0%B8%D0%B5">википедии</a>.</p>
 
@@ -62,359 +62,99 @@
           сейсмических записей на основе каталогов землетрясений а так же
           сохранение их в формате звуковых файлов.</p>
           
-          <p>На данный момент программа имеет командно строковой интерфейс,
-          что позволяет задавать достаточно гибкие настройки поиска и 
-          загрузки сейсмических записей.</p>
-          
-          <p>Примеры использования программы можно посмотреть в разделе F.A.Q.</p>
+          <p>Программа имеет командно строковой интерфейс,
+          что позволяет автоматизировать данный процесс.</p>
           
         <h3>Возможности</h3>
         <ul>
           <li>выбор FDSN Web Service из списка или задание вручную;</li>
           <li>вывод каталога событий с заданными критериями;</li>
           <li>вывод списка работающих станций в заданный интервал времени;</li>
-          <li>загрузка произвольного куска данных;</li>
-          <li>загрузка сейсмических записей на основе каталога событий;</li>
+          <li>загрузка произвольного куска сейсмических данных;</li>
+          <li>загрузка сейсмических записей на основе каталога событий с заданными критериями;</li>
         </ul>
 
-        <h3>Использование</h3>
+        <h3>Примеры полученных звуков</h3>
+        <!-- Example #001 -->
+        <a href="img/ID_5190904.AG.CCAR.00.HHZ.20160819072724.20160819113224.png">
+          <img src="img/ID_5190904.AG.CCAR.00.HHZ.20160819072724.20160819113224.png">
+        </a>
+        <audio controls>
+          <source src="snd/ID_5190904.AG.CCAR.00.HHZ.20160819072724.20160819113224.mp3" type="audio/mpeg">
+          Your browser does not support the audio element.
+        </audio>
+        <!-- Example #002 -->
+        <a href="img/ID_5191763.AG.CCAR.00.HHZ.20160829042458.20160829082958.png">
+          <img src="img/ID_5191763.AG.CCAR.00.HHZ.20160829042458.20160829082958.png">
+        </a>
+        <audio controls>
+          <source src="snd/ID_5191763.AG.CCAR.00.HHZ.20160829042458.20160829082958.mp3" type="audio/mpeg">
+          Your browser does not support the audio element.
+        </audio>
+        <!-- Example #003 -->
+        <a href="img/ID_5191298.G.ECH.00.BHZ.20160824013132.20160824023632.png">
+          <img src="img/ID_5191298.G.ECH.00.BHZ.20160824013132.20160824023632.png">
+        </a>
+        <audio controls>
+          <source src="snd/ID_5191298.G.ECH.00.BHZ.20160824013132.20160824023632.mp3" type="audio/mpeg">
+          Your browser does not support the audio element.
+        </audio>
+
+        <h3>Примеры использования программы</h3>
+        <p><strong>Вывести список событий за 2016 год с магнитудой больше либо равной 7.0:</strong></p>
+        <p><code>seismicsound-dl --print-selected-events --event-start-time 2016-01-01T00:00:00 --event-end-time 2016-12-31T00:00:00 --event-min-mag 7.0</code></p>
+        <p><strong>Результат:</strong></p>
         <pre>
-Usage:
-    seismicsound-dl [OPTIONS]
-Options:
-  =============================================================================
-  options that affect the output sound files
-  =============================================================================
-    --sample-rate
-                set the sample rate of the sound files
-                (the default is '44100')
-    --sample-format
-                set the sample format of the sound files
-                you can use the following values:
-                    i16 -- 16 bit per sample (integer)
-                    i24 -- 24 bit per sample (integer)
-                    i32 -- 32 bit per sample (integer)
-                    f32 -- 32 bit per sample (IEEE774)
-                    f64 -- 64 bit per sample (IEEE774)
-                (the default is 'i16')
-    --output-directory
-                set the output directory of the sound files
-                (the default is '.' (current directory))
-    --filename-format
-                set the file name format of the sound files
-                you can use the following variables in the pattern:
-                    %eid%       -- event id
-                    %net%       -- network code
-                    %sta%       -- station code
-                    %loc%       -- location code
-                    %chan%      -- channel code
-                    %starttime% -- start time 
-                                   (will be represented as 'YYYYMMDDTHHMMSS')
-                    %endtime%   -- end time
-                                   (will be represented as 'YYYYMMDDTHHMMSS')
-                (the default is '%eid%.%net%.%sta%.%loc%.%cha%.%stm%.%etm%')
-    --filename-conflict-action
-                set the action on duplicate file names
-                you can use the following values:
-                    suffix    -- add an unique suffix to the new file
-                    overwrite -- overwrite the old file with the new file
-                    skip      -- do not download the duplicate of the file
-                (the default is 'suffix')
-
-  =============================================================================
-  options that affect the event list selection parameters
-  =============================================================================
-    --event-id
-                set the event id                
-                (if this option is set, all other options related to the 
-                selection list of events (--event-*) will be ignored
-                the result will be a list of the one event 
-                with the specified id)
-    --event-start-time
-                set the start time of the time interval when event is happened
-                (time must have the following format: 'YYYY-MM-DDTHH:MM:SS')
-    --event-end-time
-                set the end time of the time interval when event is happened
-                (time must have the following format: 'YYYY-MM-DDTHH:MM:SS')
-    --event-min-mag
-                set the minimum magnitude of the earthquake
-                (see the 'earthquake magnitude scale' below for detail)
-    --event-max-mag
-                set the maximum magnitude of the earthquake
-                (see the 'earthquake magnitude scale' below for detail)
-    --event-min-depth
-                set the minimum depth of the earthquake
-                (unit: kilometer)
-    --event-max-depth
-                set the maximum depth of the earthquake
-                (unit: kilometer)
-
-    BOX search terms, incompatible with RADIAL search terms
-    --event-min-lat
-                set the minimum latitude
-                (unit: degree; range: [-90.0; 90.0])
-    --event-max-lat
-                set the maximum latitude
-                (unit: degree; range: [-90.0; 90.0])
-    --event-min-lon
-                set the minimum longitude
-                (unit: degree; range: [-180.0; 180.0])
-    --event-max-lon
-                set the maximum longitude
-                (unit: degree; range: [-180.0; 180.0])
-
-    RADIAL search terms, incompatible with the BOX search terms
-    --event-lat
-                set the central latitude point
-                (unit: degree; range: [-90.0; 90.0])
-    --event-lon
-                set the central longitude point
-                (unit: degree; range: [-180.0; 180.0])
-    --event-min-radius
-                set the minimum distance from the geographic point 
-                defined by the central latitude and longitude
-                (unit: degree; range: [-180.0; 180.0])
-    --event-max-radius
-                set the maximum distance from the geographic point 
-                defined by the central latitude and longitude
-                (unit: degree; range: [-180.0; 180.0])
-
-  =============================================================================
-  options that affect the trace list selection parameters
-  =============================================================================
-    --network
-                set the network code
-                (see the 'network code format' below for detail)
-    --station
-                set the station code
-                (see the 'station code format' below for detail)
-    --location
-                set the location code
-                (see the 'location code format' below for detail)
-    --channel
-                set the channel code
-                (see the 'channel code format' below for detail)
-    --start-time
-                set the start time of the trace of the data
-                (time must have the following format: 'YYYY-MM-DDTHH:MM:SS')
-    --end-time
-                set the end time of the trace of the data
-                (time must have the following format: 'YYYY-MM-DDTHH:MM:SS')
-
-                NOTE: if you specify the time interval of the trace of the data
-                then all options related to the selection 
-                list of events (--event-*) will be ignored
-
-    BOX search terms, incompatible with RADIAL search terms
-    --station-min-lat
-                set the minimum latitude
-                (unit: degree; range: [-90.0; 90.0])
-    --station-max-lat
-                set the maximum latitude
-                (unit: degree; range: [-90.0; 90.0])
-    --station-min-lon
-                set the minimum longitude
-                (unit: degree; range: [-180.0; 180.0])
-    --station-max-lon
-                set the maximum longitude
-                (unit: degree; range: [-180.0; 180.0])
-
-    RADIAL search terms, incompatible with the BOX search terms
-    --station-lat
-                set the central latitude point
-                (unit: degree; range: [-90.0; 90.0])
-    --station-lon
-                set the central longitude point
-                (unit: degree; range: [-180.0; 180.0])
-    --station-min-radius
-                set the minimum distance from the geographic point 
-                defined by the central latitude and longitude
-                (unit: degree; range: [-180.0; 180.0])
-    --station-max-radius
-                set the maximum distance from the geographic point 
-                defined by the central latitude and longitude
-                (unit: degree; range: [-180.0; 180.0])
-
-  =============================================================================
-  other options
-  =============================================================================
-    --limit
-                set the limit of the total number of downloadable sounds
-                (the default is unlimited)
-    --limit-per-event
-                set the limit of the total number of downloadable sounds 
-                per one event    
-                (the default is unlimited)
-    --seconds-before
-                set the additional seconds which will be downloaded 
-                before the first seismic phase
-                (the defalt is '300' seconds)
-    --seconds-after
-                set the seconds which will be downloaded 
-                after the first seismic phase
-                (the defalt is '3600' seconds)
-    --fdsnws-dataselect-url
-                set the URL of the fdsnws dataselect service
-                you can also use the CODE which can be found in the fdsnws 
-                dataselect service list (see --print-fdsnws-dataselect-services)
-                (the default is the first record 
-                of the fdsnws dataselect service list)
-    --fdsnws-station-url
-                set the URL of the fdsnws station service
-                you can also use the CODE which can be found in the fdsnws 
-                station service list (see --print-fdsnws-station-services)
-                (the default is the first record 
-                of the fdsnws station service list)
-    --fdsnws-event-url
-                set the URL of the fdsnws event service
-                you can also use the CODE which can be found in the fdsnws 
-                event service list (see --print-fdsnws-event-services)
-                (the default is the first record 
-                of the fdsnws event service list)
-    --print-fdsnws-dataselect-services
-                display the list of the known fdsnws dataselect services
-                and exit
-    --print-fdsnws-station-services
-                display the list of the known fdsnws station services
-                and exit
-    --print-fdsnws-event-services
-                display the list of the known fdsnws event services
-                and exit
-    --print-fdsnws-services
-                display the list of the known fdsnws services
-                and exit
-    --print-selected-events
-                display the list of the selected events 
-                without download the any sounds
-                (only options that affect the event list selection parameters
-                will be used)
-    --print-selected-traces
-                display the list of the selected traces 
-                without download the any sounds
-                (only options that affect the trace list selection parameters
-                will be used)               
-    --selected-events-format
-                set the format of the selected event row
-                you can use the following variables in the pattern:    
-                    %eid%   -- event id
-                    %type%  -- magnitude type
-                    %val%   -- magnitude value
-                    %lat%   -- latitude
-                    %lon%   -- longitude
-                    %depth% -- depth
-                    %time%  -- time 
-                               (will be represented as 'YYYY-MM-DDTHH:MM:SS')
-                    %desc%  -- event description
-                (the default is ' %eid% | %type% | %val% | %lat% | %lon% | %depth% | %time | %desc%')
-    --selected-traces-format
-                set the format of the selected trace row
-                you can use the following variables in the pattern:      
-                    %net%    -- network code
-                    %sta%    -- station code
-                    %loc%    -- location code
-                    %chan%   -- channel code
-                    %lat%    -- latitude
-                    %lon%    -- longitude
-                    %elevat% -- elevation
-                    %depth%  -- depth
-                    %stime%  -- start time
-                                (will be represented as 'YYYY-MM-DDTHH:MM:SS')
-                    %etime%  -- end time
-                                (will be represented as 'YYYY-MM-DDTHH:MM:SS') 
-                    %site%   -- site name
-                (the default is ' %net% | %sta% | %loc% | %chan% | %lat% | %lon% | %elevat% | %depth% | %stime% | %etime% | %site%')
-    --debug
-                display the debug information
-    --help
-                display this help message and exit
-
-  =============================================================================
-  quick reference guide
-  ============================================================================= 
-  earthquake magnitude scale:
-  - 2.5 or less    -- usually not felt, but can be recorded by seismograph
-                      (~900,000 per year)
-  - 2.5 to 5.4     -- often felt, but only causes minor damage
-                      (~30,000 per year)
-  - 5.5 to 6.0     -- slight damage to buildings and other structures
-                      (~500 per year)
-  - 6.1 to 6.9     -- may cause a lot of damage in very populated areas
-                      (~100 per year)
-  - 7.0 to 7.9     -- major earthquake. Serious damage
-                      (~20 per year)
-  - 8.0 or greater -- great earthquake. Can totally destroy communities
-                      near the epicenter 
-                      (one every 5 to 10 years)
-
-  network code format:
-  - 2 characters: uppercase letters or numbers  
-
-  station code format:
-  - 5 characters: uppercase letters or numbers
-
-  location code format:
-  - 2 characters: uppercase letters or numbers
-
-  channel code format:
-  - 3 characters: uppercase letters or numbers
-
-  you can also use the special symbols:
-  - '?' for any one symbol (example: 'EH?', 'E??R')
-  - '*' for any number of symbols (example: 'EH*', 'AK*')
-        </pre>
-        
-        <h3>F.A.Q.</h3>
-        <h4>Вывести список событий за 2016 год с магнитудой больше либо равной 7</h4>
-        <pre>
-$ seismicsound-dl --print-selected-events --event-start-time 2016-01-01T00:00:00 --event-end-time 2016-12-31T00:00:00 --event-min-mag 7.0
 INFO: Downloading the event list...
-----------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------
 List of Events
-----------------------------------------------------------------------------------
-        ID | TYPE |  MAG |  LATITUDE | LONGITUDE |     DEPTH | %time | DESCRIPTION
-----------------------------------------------------------------------------------
-   9948944 |  Mww |  7.6 |  -43.4053 |  -73.9403 |    38.000 | %time | SOUTHERN CHILE
-   9946716 |  mww |  7.9 |   -4.5049 |  153.5216 |    94.540 | %time | NEW IRELAND REGION, P.N.G.
-   9912119 |  mww |  7.8 |  -10.6760 |  161.3298 |    41.000 | %time | SOLOMON ISLANDS
-   5198717 |  mww |  7.0 |   11.9597 |  -88.8355 |    10.340 | %time | OFF COAST OF CENTRAL AMERICA
-   5197722 |  Mww |  7.8 |  -42.7245 |  173.0647 |    22.000 | %time | SOUTH ISLAND, NEW ZEALAND
-   5192066 |  mww |  7.1 |  -37.4010 |  179.0548 |    19.000 | %time | OFF E. COAST OF N. ISLAND, N.Z.
-   5191763 |  mww |  7.1 |   -0.0471 |  -17.8294 |    10.000 | %time | NORTH OF ASCENSION ISLAND
-   5190904 |  mww |  7.4 |  -55.2793 |  -31.8740 |    10.000 | %time | SOUTH GEORGIA ISLAND REGION
-   5190300 |  mww |  7.2 |  -22.4778 |  173.1108 |    16.440 | %time | SOUTHEAST OF LOYALTY ISLANDS
-   5189231 |  mww |  7.7 |   18.5439 |  145.5410 |   207.620 | %time | MARIANA ISLANDS
-   5183973 |  mww |  7.2 |  -56.2409 |  -26.9353 |    78.000 | %time | SOUTH SANDWICH ISLANDS REGION
-   5181222 |  mww |  7.0 |  -16.0429 |  167.3786 |    24.000 | %time | VANUATU ISLANDS
-   5180176 |  mww |  7.8 |    0.3819 |  -79.9218 |    20.590 | %time | NEAR COAST OF ECUADOR
-   5180038 |  mww |  7.0 |   32.7906 |  130.7543 |    10.000 | %time | KYUSHU, JAPAN
-   5176028 |  mww |  7.8 |   -4.9521 |   94.3299 |    24.000 | %time | SOUTHWEST OF SUMATRA, INDONESIA
-   5172800 |  mww |  7.2 |   54.0057 |  158.5128 |   163.220 | %time | KAMCHATKA PENINSULA, RUSSIA
-   5172125 |  mww |  7.1 |   59.6204 | -153.3392 |   125.600 | %time | SOUTHERN ALASKA
-----------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------
+        ID | TYPE |  MAG |  LATITUDE | LONGITUDE |     DEPTH |                TIME | DESCRIPTION
+------------------------------------------------------------------------------------------------
+   9948944 |  Mww |  7.6 |  -43.4053 |  -73.9403 |    38.000 | 2016-12-25T14:22:27 | SOUTHERN CHILE
+   9946716 |  mww |  7.9 |   -4.5049 |  153.5216 |    94.540 | 2016-12-17T10:51:10 | NEW IRELAND REGION, P.N.G.
+   9912119 |  mww |  7.8 |  -10.6760 |  161.3298 |    41.000 | 2016-12-08T17:38:46 | SOLOMON ISLANDS
+   5198717 |  mww |  7.0 |   11.9597 |  -88.8355 |    10.340 | 2016-11-24T18:43:48 | OFF COAST OF CENTRAL AMERICA
+   5197722 |  Mww |  7.8 |  -42.7245 |  173.0647 |    22.000 | 2016-11-13T11:02:59 | SOUTH ISLAND, NEW ZEALAND
+   5192066 |  mww |  7.1 |  -37.4010 |  179.0548 |    19.000 | 2016-09-01T16:37:57 | OFF E. COAST OF N. ISLAND, N.Z.
+   5191763 |  mww |  7.1 |   -0.0471 |  -17.8294 |    10.000 | 2016-08-29T04:29:57 | NORTH OF ASCENSION ISLAND
+   5190904 |  mww |  7.4 |  -55.2793 |  -31.8740 |    10.000 | 2016-08-19T07:32:22 | SOUTH GEORGIA ISLAND REGION
+   5190300 |  mww |  7.2 |  -22.4778 |  173.1108 |    16.440 | 2016-08-12T01:26:36 | SOUTHEAST OF LOYALTY ISLANDS
+   5189231 |  mww |  7.7 |   18.5439 |  145.5410 |   207.620 | 2016-07-29T21:18:26 | MARIANA ISLANDS
+   5183973 |  mww |  7.2 |  -56.2409 |  -26.9353 |    78.000 | 2016-05-28T09:46:59 | SOUTH SANDWICH ISLANDS REGION
+   5181222 |  mww |  7.0 |  -16.0429 |  167.3786 |    24.000 | 2016-04-28T19:33:24 | VANUATU ISLANDS
+   5180176 |  mww |  7.8 |    0.3819 |  -79.9218 |    20.590 | 2016-04-16T23:58:36 | NEAR COAST OF ECUADOR
+   5180038 |  mww |  7.0 |   32.7906 |  130.7543 |    10.000 | 2016-04-15T16:25:06 | KYUSHU, JAPAN
+   5176028 |  mww |  7.8 |   -4.9521 |   94.3299 |    24.000 | 2016-03-02T12:49:48 | SOUTHWEST OF SUMATRA, INDONESIA
+   5172800 |  mww |  7.2 |   54.0057 |  158.5128 |   163.220 | 2016-01-30T03:25:10 | KAMCHATKA PENINSULA, RUSSIA
+   5172125 |  mww |  7.1 |   59.6204 | -153.3392 |   125.600 | 2016-01-24T10:30:29 | SOUTHERN ALASKA
+------------------------------------------------------------------------------------------------
 Total: 17
         </pre>
-        
-        <h4>Вывести список событий за август 2016 года с магнитудой больше либо 
-        равной 5 с эпицентром вблизи Италии</h4>
+
+        <p><strong>Вывести список событий за август 2016 года с магнитудой больше либо
+        равной 5 с эпицентром вблизи Италии:</strong></p>
+        <p><code>seismicsound-dl --print-selected-events --event-start-time 2016-08-01T00:00:00 --event-end-time 2016-09-01T00:00:00 --event-min-mag 5.0  --event-min-lon 9 --event-max-lon 19 --event-min-lat 37 --event-max-lat 43</code></p>
+        <p><strong>Результат:</strong></p>
         <pre>
-$ seismicsound-dl --print-selected-events --event-start-time 2016-08-01T00:00:00 --event-end-time 2016-09-01T00:00:00 --event-min-mag 5.0  --event-min-lon 9 --event-max-lon 19 --event-min-lat 37 --event-max-lat 43
 INFO: Downloading the event list...
-----------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------
 List of Events
-----------------------------------------------------------------------------------
-        ID | TYPE |  MAG |  LATITUDE | LONGITUDE |     DEPTH | %time | DESCRIPTION
-----------------------------------------------------------------------------------
-   5191300 |  mww |  5.6 |   42.8335 |   13.1319 |     4.950 | %time | CENTRAL ITALY
-   5191298 |  mww |  6.2 |   42.7230 |   13.1877 |     4.440 | %time | CENTRAL ITALY
-----------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------
+        ID | TYPE |  MAG |  LATITUDE | LONGITUDE |     DEPTH |                TIME | DESCRIPTION
+------------------------------------------------------------------------------------------------
+   5191300 |  mww |  5.6 |   42.8335 |   13.1319 |     4.950 | 2016-08-24T02:33:29 | CENTRAL ITALY
+   5191298 |  mww |  6.2 |   42.7230 |   13.1877 |     4.440 | 2016-08-24T01:36:32 | CENTRAL ITALY
+------------------------------------------------------------------------------------------------
 Total: 2
         </pre>
 
-        <h4>Вывести список вертикальных каналов(--channel *Z) оборудования установленного 
-        вблизи Италии, которое было включено в момент события с 
-        идентификатором "5191300"</h4>
+        <p><strong>Вывести список вертикальных каналов станций, которые
+        установлены вблизи Италии и писали в момент, когда произошло 
+        событие с идентификатором "5191300":</strong></p>
+        <p><code>seismicsound-dl --print-selected-traces --event-id 5191298 --station-min-lon 9 --station-max-lon 19 --station-min-lat 37 --station-max-lat 43 --channel *Z</code></p>
+        <p><strong>Результат:</strong></p>
         <pre>
-$ seismicsound-dl --print-selected-traces --event-id 5191298  --station-min-lon 9 --station-max-lon 19 --station-min-lat 37 --station-max-lat 43 --channel *Z
 INFO: Downloading the station list...
 --------------------------------------------------------------------------------------------------------------------------
 List of Channels
@@ -431,17 +171,11 @@ List of Channels
 Total: 382
         </pre>
 
-        
-        <h4>Загрузить записи события с идентификатором "5191300" с 
-        channel=BHZ и location=00 оборудования установленного вблизи Италии. 
-        Загрузить не более 10 записей. Файлы должны быть сохранены в текущий 
-        каталог. Частота дискретизации 16кГц.</h4>
-        <pre>
-$ seismicsound-dl --event-id 5191298 --station-min-lon 1 --station-max-lon 29 --station-min-lat 27 --station-max-lat 53 --channel BHZ --location 00 --limit 10 --sample-rate 16000
-INFO: Downloading the event list...
-INFO: Downloading the station list...
-...
+        <p><strong>Загрузить не более 10 записи события с идентификатором "5191300" с каналов "BHZ" с location "00" оборудования установленного вблизи Италии. Полученные аудиозаписи сохранить в текущий каталог с частотой дискретизации равной 16кГц:</strong></p>
+        <p><code>seismicsound-dl --event-id 5191298 --station-min-lon 1 --station-max-lon 29 --station-min-lat 27 --station-max-lat 53 --channel BHZ --location 00 --limit 10 --sample-rate 16000</code></p>
+        <p><strong>Результат:</strong></p>
 
+        <pre>
 $ ls -1
 ID_5191298.G.CLF.00.BHZ.20160824013132.20160824023632.wav
 ID_5191298.G.ECH.00.BHZ.20160824013132.20160824023632.wav
@@ -450,16 +184,13 @@ ID_5191298.II.BFO.00.BHZ.20160824013132.20160824023632.wav
 ID_5191298.II.IBFO.00.BHZ.20160824013132.20160824023632.wav
         </pre>
 
-        <h4>Загрузить по одной записи channel=HHZ, location=00 для каждого
-        события магнитудой больше либо равной 7.0. Удлинить запись до 14400 секунд.
-        Всего не более 10 записей.
-        Если файлы уже существуют, то перезаписать их новыми.</h4>
+        <p><strong>Для не более, чем 10 событий с магнитудой больше либо равной 7.0 
+        загрузить по одной записи с каналов "HHZ" с location "00". Каждую
+        запись удлинить до 14400 секунд:</strong></p>
+        <p><code>seismicsound-dl --event-min-mag 7 --channel HHZ --location 00 --limit 10 --limit-per-event 1 --seconds-after 14400</code></p>
+        <p><strong>Результат:</strong></p>
+        
         <pre>
-$ seismicsound-dl --event-min-mag 7 --channel HHZ --location 00 --limit 10 --limit-per-event 1 --seconds-after 14400 --filename-conflict-action overwrite
-INFO: Downloading the event list...
-INFO: Downloading the station list...
-...
-
 $ ls -1
 ID_5190904.AG.CCAR.00.HHZ.20160819072724.20160819113224.wav
 ID_5191763.AG.CCAR.00.HHZ.20160829042458.20160829082958.wav
@@ -472,6 +203,294 @@ ID_9948944.AG.CCAR.00.HHZ.20161225141728.20161225182228.wav
 ID_9953968.AG.CCAR.00.HHZ.20170110060849.20170110101349.wav
 ID_9993759.AG.CCAR.00.HHZ.20170122042525.20170122083025.wav
         </pre>
+
+        <h3>Параметры запуска</h3>
+        <pre>
+Использование:
+    seismicsound-dl [OPTIONS]
+Опции:
+  =============================================================================
+  опции, которые влияют на выходные аудио файлы
+  =============================================================================
+    --sample-rate
+                установить частоту оцифровки аудио файлов
+                (по умолчанию '44100')
+    --sample-format
+                установить формат отчетов аудио файлов
+                вы можете использовать следующие значения:
+                    i16 -- 16 бит на отчет (целочисленное)
+                    i24 -- 24 бит на отчет (целочисленное)
+                    i32 -- 32 бит на отчет (целочисленное)
+                    f32 -- 32 бит на отчет (IEEE774)
+                    f64 -- 64 бит на отчет (IEEE774)
+                (по умолчанию 'i16')
+    --output-directory
+                установить выходной каталог для аудио файлов
+                (по умолчанию '.' (текущий каталог))
+    --filename-format
+                установить формат имени аудио файлов
+                вы можете использовать в формате следующие переменные:
+                    %eid%       -- идентификатор события
+                    %net%       -- код сети
+                    %sta%       -- код станции
+                    %loc%       -- код location
+                    %chan%      -- код канала
+                    %starttime% -- время начала
+                                   (будет представлено как 'YYYYMMDDTHHMMSS')
+                    %endtime%   -- время окончания
+                                   (будет представлено как  'YYYYMMDDTHHMMSS')
+                (по умолчанию '%eid%.%net%.%sta%.%loc%.%cha%.%stm%.%etm%')
+    --filename-conflict-action
+                установить действия при дублировании имен файлов
+                вы можете использовать следующие значения:
+                    suffix    -- добавить к новому имени файла уникальный суффикс
+                    overwrite -- перезаписать старый файл новым
+                    skip      -- не загружать дублирующиеся файлы
+                (по умолчанию 'suffix')
+
+  =============================================================================
+  опции, которые влияют на параметры выбора списка событий
+  =============================================================================
+    --event-id
+                установить идентификатор события
+                (если установлена эта опция, то все другие опции связанные
+                с формированием списка событий (--event-*) будут 
+                проигнорированы. В результате будет список из одного события
+                с заданным идентификатором)
+    --event-start-time
+                установить время начала интервала, в котором произошло событие
+                (время должно иметь следующий формат: 'YYYY-MM-DDTHH:MM:SS')
+    --event-end-time
+                установить время конца интервала, в котором произошло событие
+                (время должно иметь следующий формат: 'YYYY-MM-DDTHH:MM:SS')
+    --event-min-mag
+                установить минимальную магнитуду землетрясения
+                (подробности смотрите в 'шкале магнитуд землетрясений' ниже)
+    --event-max-mag
+                установить максимальную магнитуду землетрясения
+                (подробности смотрите в 'шкале магнитуд землетрясений' ниже)
+    --event-min-depth
+                установить минимальную глубину землетрясения
+                (единицы измерения: километры)
+    --event-max-depth
+                установить максимальную глубину землетрясения
+                (единицы измерения: километры)
+
+    условия поиска BOX, несовместимы с условиями поиска RADIAL
+    --event-min-lat
+                установить минимальную широту
+                (единицы измерения: градусы; диапазон значений: [-90.0; 90.0])
+    --event-max-lat
+                установить максимальную широту
+                (единицы измерения: градусы; диапазон значений: [-90.0; 90.0])
+    --event-min-lon
+                установить минимальную долготу
+                (единицы измерения: градусы; диапазон значений: [-180.0; 180.0])
+    --event-max-lon
+                установить максимальную долготу
+                (единицы измерения: градусы; диапазон значений: [-180.0; 180.0])
+
+    условия поиска RADIAL, несовместимы с условиями поиска BOX
+    --event-lat
+                установить широту центральной точки
+                (единицы измерения: градусы; диапазон значений: [-90.0; 90.0])
+    --event-lon
+                установить долготу центральной точки
+                (единицы измерения: градусы; диапазон значений: [-180.0; 180.0])
+    --event-min-radius
+                установить минимальную дистанцию от географической точки
+                определенной как "центральная точка"
+                (единицы измерения: градусы; диапазон значений: [-180.0; 180.0])
+    --event-max-radius
+                установить максимальную дистанцию от географической точки
+                определенной как "центральная точка"
+                (единицы измерения: градусы; диапазон значений: [-180.0; 180.0])
+
+  =============================================================================
+  опции, которые влияют на параметры выбора списка трасс
+  =============================================================================
+    --network
+                установить код сети
+                (подробности смотрите в 'формат кода сети' ниже)
+    --station
+                установить код станции
+                (подробности смотрите в 'формат кода станции' ниже)
+    --location
+                установить код location
+                (подробности смотрите в 'формат кода location' ниже)
+    --channel
+                установить код канала
+                (подробности смотрите в 'формат кода канала' ниже)
+    --start-time
+                установить время начала трассы данных
+                (время должно иметь следующий формат: 'YYYY-MM-DDTHH:MM:SS')
+    --end-time
+                установить время окончания трассы данных
+                (время должно иметь следующий формат: 'YYYY-MM-DDTHH:MM:SS')
+
+                Примечание: если вы установили временной интервал
+                трассы данных, то все опции связанные с формированием
+                списка событий (--event-*) будут проигнорированы
+
+    условия поиска BOX, несовместимы с условиями поиска RADIAL
+    --station-min-lat
+                установить минимальную широту
+                (единицы измерения: градусы; диапазон значений: [-90.0; 90.0])
+    --station-max-lat
+                установить максимальную широту
+                (единицы измерения: градусы; диапазон значений: [-90.0; 90.0])
+    --station-min-lon
+                установить минимальную долготу
+                (единицы измерения: градусы; диапазон значений: [-180.0; 180.0])
+    --station-max-lon
+                установить максимальную долготу
+                (единицы измерения: градусы; диапазон значений: [-180.0; 180.0])
+
+    условия поиска RADIAL, несовместимы с условиями поиска BOX
+    --station-lat
+                установить широту центральной точки
+                (единицы измерения: градусы; диапазон значений: [-90.0; 90.0])
+    --station-lon
+                установить долготу центральной точки
+                (единицы измерения: градусы; диапазон значений: [-180.0; 180.0])
+    --station-min-radius
+                установить минимальную дистанцию от географической точки
+                определенной как "центральная точка"
+                (единицы измерения: градусы; диапазон значений: [-180.0; 180.0])
+    --station-max-radius
+                установить максимальную дистанцию от географической точки
+                определенной как "центральная точка"
+                (единицы измерения: градусы; диапазон значений: [-180.0; 180.0])
+
+  =============================================================================
+  другие опции
+  =============================================================================
+    --limit
+                установить лимит общего количества загружаемых аудио файлов
+                (по умолчанию неограниченно)
+    --limit-per-event
+                установить лимит количества загружаемых аудио файлов
+                для каждого события
+                (по умолчанию неограниченно)
+    --seconds-before
+                установить количество дополнительных секунд, которые будут
+                загружены до первой сейсмической фазы
+                (по умолчанию '300' секунд)
+    --seconds-after
+                установить количество секунд, которые будут загружены после
+                первой сейсмической фазы
+                (по умолчанию '3600' секунд)
+    --fdsnws-dataselect-url
+                установить URL fdsnws dataselect сервиса
+                вы можете так же использовать КОД, который может быть
+                найден в списке fdsnws dataselect сервисов
+                (смотрите --print-fdsnws-dataselect-services)
+                (по умолчанию используются первая запись из списка
+                fdsnws dataselect сервисов)
+    --fdsnws-station-url
+                установить URL fdsnws station сервиса
+                вы можете так же использовать КОД, который может быть 
+                найден в списке fdsnws station сервисов
+                (смотрите --print-fdsnws-station-services)
+                (по умолчанию используются первая запись из списка
+                fdsnws station сервисов)
+
+    --fdsnws-event-url
+                установить URL fdsnws event сервиса
+                вы можете так же использовать КОД, который может быть 
+                найден в списке fdsnws event сервисов
+                (смотрите --print-fdsnws-event-services)
+                (по умолчанию используются первая запись из списка
+                fdsnws event сервисов)
+    --print-fdsnws-dataselect-services
+                показать список известных fdsnws dataselect сервисов и выйти
+    --print-fdsnws-station-services
+                показать список известных fdsnws station сервисов и выйти
+    --print-fdsnws-event-services
+                показать список известных fdsnws event сервисов и выйти
+    --print-fdsnws-services
+                показать список известных fdsnws сервисов и выйти
+    --print-selected-events
+                показать список выбранных событий без загрузки аудио файлов
+                (будут использованы только те опции, которые влияют 
+                на параметры выбора списка событий)
+    --print-selected-traces
+                показать список выбранных трасс без загрузки аудио файлов
+                (будут использованы только те опции, которые влияют 
+                на параметры выбора списка трасс)
+    --selected-events-format
+                установить формат строки вывода информации о выбранных событиях
+                вы можете использовать в формате следующие переменные:
+                    %eid%   -- идентификатор события
+                    %type%  -- тип магнитуды
+                    %val%   -- значение магнитуды
+                    %lat%   -- широта
+                    %lon%   -- долгота
+                    %depth% -- глубина
+                    %time%  -- время
+                               (будет представлено как 'YYYY-MM-DDTHH:MM:SS')
+                    %desc%  -- event description
+                (по умолчанию ' %eid% | %type% | %val% | %lat% | %lon% | %depth% | %time% | %desc%')
+    --selected-traces-format
+                установить формат строки вывода информации о выбранных трассах
+                вы можете использовать в формате следующие переменные:
+                    %net%    -- код сети
+                    %sta%    -- код станции
+                    %loc%    -- код location
+                    %chan%   -- код канала
+                    %lat%    -- широта
+                    %lon%    -- долгота
+                    %elevat% -- высота
+                    %depth%  -- глубина
+                    %stime%  -- время начала
+                                (будет представлено как 'YYYY-MM-DDTHH:MM:SS')
+                    %etime%  -- время окончания
+                                (будет представлено как 'YYYY-MM-DDTHH:MM:SS') 
+                    %site%   -- имя места
+                (по умолчанию ' %net% | %sta% | %loc% | %chan% | %lat% | %lon% | %elevat% | %depth% | %stime% | %etime% | %site%')
+    --debug
+                показать отладочную информацию
+    --help
+                показать это сообщение и выйти
+
+  =============================================================================
+  краткое справочное руководство
+  ============================================================================= 
+  шкала магнитуд землетрясений:
+  - 2.5 или меньше  -- как правило, не ощущается, но могут быть записаны
+                       сейсмографами
+                       (~900,000 в год)
+  - 2.5 .. 5.4      -- зачастую ощущаются, но вызывают лишь незначительные 
+                       повреждения
+                       (~30,000 в год)
+  - 5.5 .. 6.0      -- небольшие повреждения зданий и сооружений
+                       (~500 в год)
+  - 6.1 .. 6.9      -- могут вызывать значительные разрушения в густо населенных
+                       районах
+                       (~100 в год)
+  - 7.0 .. 7.9      -- сильные землетрясения, серьезные разрушения
+                       (~20 в год)
+  - 8.0 или сильнее -- сильнейшие землетрясения, могут полностью разрушить
+                       поселения вблизи эпицентра
+                       (каждые 5 .. 10 лет)
+
+  формат кода сети:
+  - 2 символа: верхний регистр или цифры
+
+  формат кода станции:
+  - 5 символа: верхний регистр или цифры
+
+  формат кода location:
+  - 2 символа: верхний регистр или цифры
+
+  формат кода канала:
+  - 3 символа: верхний регистр или цифры
+
+  вы так же можете использовать специальные символы:
+  - '?' для любого одного символа (пример: 'EH?', 'E??R')
+  - '*' для любого количества любых символов (пример: 'EH*', 'AK*')
+        </pre>
+        
         <h3>Новости</h3>
         <h4>Версия 0.1.1</h4>
         <ul>
